@@ -27,9 +27,9 @@ def open_time(control_dist_km, brevet_dist_km, brevet_start_time):
        This will be in the same time zone as the brevet start time.
     """
     if control_dist_km> 1.2*brevet_dist_km:
-        print("the last control point ({control_dist_km})  is over 20% longer than the theoretical distance ({brevet_dist_km})\n")
+        return "the control point is over 20% longer than the theoretical distance"
     if control_dist_km<0:
-        print("unrecognized control point measurement\n")
+        return "unrecognized control point measurement"
     elif control_dist_km==0:
         time=0
     elif 0<control_dist_km<=200:
@@ -43,8 +43,7 @@ def open_time(control_dist_km, brevet_dist_km, brevet_start_time):
         time= 200/34 + 200/32 + 200/30+ (control_dist_km-600)/28
     hrs=time//1
     mins=(time-hrs)*60
-    scs=mins//1*60
-    return brevet_start_time.shift(hours=hrs,minutes=mins,seconds=scs)
+    return brevet_start_time.shift(hours=hrs,minutes=mins)
 
 
 
@@ -61,17 +60,15 @@ def close_time(control_dist_km, brevet_dist_km, brevet_start_time):
        This will be in the same time zone as the brevet start time.
     """
     if control_dist_km> 1.2*brevet_dist_km:
-        print("the last control point ({control_dist_km})  is over 20% longer than the theoretical distance ({brevet_dist_km})\n")
+        return "the control point is over 20% longer than the theoretical distance"
     if control_dist_km<0:
-        print("unrecognized control point measurement\n")
+        return "unrecognized control point measurement"
     elif control_dist_km==0:
-        time=0
+        time=1
     elif 0<control_dist_km<=600:
         time=control_dist_km/15
     elif 600<control_dist_km<=1000:
         time=600/15+(control_dist_km-600)/11.428
     hrs=time//1
     mins=(time-hrs)*60
-    scs=mins//1*60
-    return brevet_start_time.shift(hours=hrs,minutes=mins,seconds=scs)
-
+    return brevet_start_time.shift(hours=hrs,minutes=mins)
