@@ -17,7 +17,6 @@ import logging
 ###
 app = flask.Flask(__name__)
 CONFIG = config.configuration()
-app.secret_key = CONFIG.SECRET_KEY
 
 ###
 # Pages
@@ -55,16 +54,15 @@ def _calc_times():
     km = request.args.get('km', 999, type=float)
     app.logger.debug("km={}".format(km))
     app.logger.debug("request.args: {}".format(request.args))
-    # FIXME!
-    # Right now, only the current time is passed as the start time
-    # and control distance is fixed to 200
-    # You should get these from the webpage!
-    open_time = acp_times.open_time(km, 200, arrow.now().isoformat).format('YYYY-MM-DDTHH:mm')
-    close_time = acp_times.close_time(km, 200, arrow.now().isoformat).format('YYYY-MM-DDTHH:mm')
+    dist=request.args.get('dist',type=int)#get brevet_dist
+    bd=request.args.get('bd',type=str)#get begin date
+    arrow_bd=arrow.get(bd,"YYYY-MM-DDTHH:mm")#change date to be arrow
+    #call open_time and close_time, then change return value(is arrow) from
+    #those two function to be "YYYY-MM-DDTHH:mm" format
+    open_time = acp_times.open_time(km, dist,arrow_bd).format('YYYY-MM-DDTHH:mm')
+    close_time = acp_times.close_time(km, dist,arrow_bd).format('YYYY-MM-DDTHH:mm')
     result = {"open": open_time, "close": close_time}
-    return flask.jsonify(result=result)
-
-
+    return flask.jsonify(result=result)#pass on to calc.html
 #############
 
 app.debug = CONFIG.DEBUG

@@ -114,23 +114,15 @@
          <script type="text/javascript">
             var SCRIPT_ROOT = {{ request.script_root|tojson|safe }} ;
             var TIME_CALC_URL = SCRIPT_ROOT + "/_calc_times";
-
-            // FIX ME!
-            // Right now, only the kilometers are passed
-            // you need to pass much more!
-            // View flask_brevets.py for details.
-            function calc_times(control) {
+            function calc_times(control,distance,date_time) {
               var km = control.find("input[name='km']").val();
+	      var dist=$("#brevet_dist_km").val()
+	      var bd=$("#begin_date").val()
               var open_time_field = control.find("input[name='open']");
               var close_time_field = control.find("input[name='close']");
-
-              $.getJSON(TIME_CALC_URL, {km: km}).done(
+	      $.getJSON(TIME_CALC_URL, {km: km,bd:bd,dist:dist}).done(
                 function(data) {
                    var times = data.result;
-                   console.log("Got a response: ");
-                   console.log("Response.open = " + times.open);
-                   // This part will automatically fill the open and close slots,
-                   // so don't worry about those.
                    open_time_field.val(moment(times.open).format("YYYY-MM-DDTHH:mm"));
                    close_time_field.val(moment(times.close).format("YYYY-MM-DDTHH:mm"));
                  }
