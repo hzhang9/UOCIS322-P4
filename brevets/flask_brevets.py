@@ -8,19 +8,29 @@ import flask
 from flask import request
 import arrow  # Replacement for datetime, based on moment.js
 import acp_times  # Brevet time calculations
+import configparser
 import config
-
+import os
 import logging
 
 ###
 # Globals
 ###
 app = flask.Flask(__name__)
-CONFIG = config.configuration()
+config = configparser.ConfigParser()
+if os.path.isfile("./credentials.ini"):
+    print("break1")
+    config.read("./credentials.ini")
+else:
+    print("break2")
+    config.read("./app.ini")
+global PORT
+PORT=config["DEFAULT"]["PORT"]
+global DEBUG
+DEBUG=config["DEFAULT"]["DEBUG"]
 ###
 # Pages
 ###
-
 
 @app.route("/")
 @app.route("/index")
@@ -59,14 +69,14 @@ def _calc_times():
     #those two function to be "YYYY-MM-DDTHH:mm" format
     open_time = acp_times.open_time(km, dist,arrow_bd).format('YYYY-MM-DDTHH:mm')
     close_time = acp_times.close_time(km, dist,arrow_bd).format('YYYY-MM-DDTHH:mm')
-    result = {"open": open_time, "close": close_time,"PORT":CONFIG.PORT}
+    result = {"open": open_time, "close": close_time}
     return flask.jsonify(result=result)#pass on to calc.html
 #############
 
-app.debug = CONFIG.DEBUG
+app.debug = DEBUG
 if app.debug:
     app.logger.setLevel(logging.DEBUG)
 
 if __name__ == "__main__":
-    print("Opening for global access on port {}".format(CONFIG.PORT))
-    app.run(port=CONFIG.PORT, host="0.0.0.0")
+    print("Opening for global access on port {}".format(PORT))
+    app.run(port=PORT, host="0.0.0.0")
