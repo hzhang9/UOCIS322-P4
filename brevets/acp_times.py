@@ -74,13 +74,19 @@ def close_time(control_dist_km, brevet_dist_km, brevet_start_time):
         #time cost in cd is 1+cd* speed 20
             time=1+control_dist_km/20
         elif 60<control_dist_km<=600:
-            if control_dist_km==200:
             #if cd exactly equals 200,300,400,600 or 1000,time will be a fixed value
-                time=13.5
+            if control_dist_km==200:
+                if brevet_dist_km==200:
+                    time=13.5
+                else:
+                    time=control_dist_km/15
             elif control_dist_km==300:
                 time=20
             elif control_dist_km==400:
-                time=27
+                if brevet_dist_km==400:
+                    time=27
+                else:
+                    time=control_dist_km/15
             elif control_dist_km==600:
                 time=40
             else:
