@@ -17,7 +17,6 @@ import logging
 ###
 app = flask.Flask(__name__)
 CONFIG = config.configuration()
-
 ###
 # Pages
 ###
@@ -33,7 +32,6 @@ def index():
 @app.errorhandler(404)
 def page_not_found(error):
     app.logger.debug("Page not found")
-    flask.session['linkback'] = flask.url_for("index")
     return flask.render_template('404.html'), 404
 
 
@@ -61,7 +59,7 @@ def _calc_times():
     #those two function to be "YYYY-MM-DDTHH:mm" format
     open_time = acp_times.open_time(km, dist,arrow_bd).format('YYYY-MM-DDTHH:mm')
     close_time = acp_times.close_time(km, dist,arrow_bd).format('YYYY-MM-DDTHH:mm')
-    result = {"open": open_time, "close": close_time}
+    result = {"open": open_time, "close": close_time,"PORT":CONFIG.PORT}
     return flask.jsonify(result=result)#pass on to calc.html
 #############
 
